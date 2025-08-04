@@ -2,19 +2,14 @@ import Navbar from '../components/Navbar'
 import Hero from '../components/Hero'
 import Cardlist from '../components/Cardlist'
 
-
- const Home = async () => {
-
-  let res = await fetch("https://pokeapi.co/api/v2/pokemon");
-  let pokemon = await res.json();
-
-
+const Home = () => {
   return (
     <div>
-      <Navbar/>
-      <Hero/>
-      <Cardlist pokemon={pokemon}/>
+      <Navbar />
+      <Hero />
+      <Cardlist /> 
     </div>
   );
-}
-export default Home
+};
+
+export default Home;

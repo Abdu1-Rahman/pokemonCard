@@ -1,12 +1,13 @@
 'use client'
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { GoDotFill } from "react-icons/go";
 import Button from "./Button";
 import { MdCatchingPokemon } from "react-icons/md";
-import Link from 'next/link'
+import Link from 'next/link';
+import { toast } from 'react-toastify';
 
-const Cards = ({ result, index }) => {
+const Cards = ({ result, index, mode = "default", onRemove }) => {
   const colorVariants = [
     "from-green-500",
     "from-blue-500",
@@ -15,21 +16,53 @@ const Cards = ({ result, index }) => {
     "from-purple-500",
   ];
 
-  const [catchpokemon, setCatchPokemon] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  // Get Pokemon ID from the URL
+  const getPokemonId = (url) => {
+  if (!url) return null;
+  const parts = url.split("/").filter(Boolean);
+  return parts[parts.length - 1];
+};
+
+// Fallback to existing ID if available
+const pokemonId = result.id || getPokemonId(result.url);
+
+
+  // Check if this Pokémon is already in favorites on mount
+  useEffect(() => {
+    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    const alreadyFav = favorites.some((poke) => poke.name === result.name);
+    setIsFavorite(alreadyFav);
+  }, [result.name]);
+
   const handleClick = () => {
-    setCatchPokemon(!catchpokemon);
+     if (mode === "collection" && onRemove) {
+      onRemove(result.name);
+      return;
+    }
+    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    if (!favorites.some((poke) => poke.name === result.name)) {
+      favorites.push({
+        name: result.name,
+        id: pokemonId,
+        image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`,
+      });
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+      setIsFavorite(true);
+      toast("Saved to Collection!");
+    } else {
+      // Optional: Remove from favorites if clicked again
+      const updated = favorites.filter((poke) => poke.name !== result.name);
+      localStorage.setItem("favorites", JSON.stringify(updated));
+      setIsFavorite(false);
+      toast("Removed from Collection!")
+    }
   };
 
   const backgroundColor =
     colorVariants[Math.floor(index / 4) % colorVariants.length];
-
-  const getPokemonId = (url) => {
-    const parts = url.split("/").filter(Boolean);
-    return parts[parts.length - 1];
-  };
-
-  const pokemonId = getPokemonId(result.url);
-
 
   return (
     <div className="flex hover:scale-105 transition duration-500 items-center justify-center">
@@ -44,13 +77,13 @@ const Cards = ({ result, index }) => {
           alt="pokimage"
         />
 
-        <button onClick={handleClick} className="z-1 cursor-pointer">
-          <MdCatchingPokemon
-            className={`absolute top-2 right-3 text-3xl ${
-              catchpokemon ? "text-red-500" : "text-white/15"
-            }`}
-          />
-        </button>
+         <button onClick={handleClick} className="z-1 cursor-pointer">
+    <MdCatchingPokemon
+      className={`absolute top-2 right-3 text-3xl ${
+        (mode === "collection" || isFavorite) ? "text-red-500" : "text-white/15"
+      }`}
+    />
+  </button>
 
         <div className="flex absolute gap-35 top-40 justify-center items-center">
           <GoDotFill />
@@ -60,12 +93,14 @@ const Cards = ({ result, index }) => {
           <GoDotFill />
         </div>
 
-        <Link href="/details" className="z-1 flex justify-center"><Button  className={"absolute top-50 w-38"} content={"Main Details"} /></Link>
+        <Link href="/details" className="z-1 flex justify-center">
+          <Button className={"absolute top-50 w-38"} content={"Main Details"} />
+        </Link>
 
         <Image
           className="absolute top-5 opacity-10"
           src="/images/pokeball.png"
-          alt="pokeball" 
+          alt="pokeball"
           width={300}
           height={400}
         />

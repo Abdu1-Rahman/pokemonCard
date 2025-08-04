@@ -2,16 +2,53 @@
 import Cards from "../components/Cards";
 import { useState, useEffect } from "react";
 
-const Cardlist = ({ pokemon }) => {
+const Cardlist = () => {
+  const [pokemonList, setPokemonList] = useState([]);
+  const [filteredPokemon, setFilteredPokemon] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredPokemon, setFilteredPokemon] = useState(pokemon.results);
+  const [offset, setOffset] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true); // to stop fetching when no more data
 
+  // Fetch Pokémon from API
+  const fetchPokemon = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=20`
+      );
+      const data = await res.json();
+
+      if (data.results.length === 0) {
+        setHasMore(false);
+      } else {
+        const newList = [...pokemonList, ...data.results];
+        setPokemonList(newList);
+        setFilteredPokemon(
+          newList.filter((p) =>
+            p.name.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+        );
+        setOffset((prev) => prev + 20);
+      }
+    } catch (err) {
+      console.error("Failed to fetch Pokémon", err);
+    }
+    setLoading(false);
+  };
+
+  // Initial fetch
   useEffect(() => {
-    const filtered = pokemon.results.filter((p) =>
+    fetchPokemon();
+  }, []);
+
+  // Filter Pokémon on search change
+  useEffect(() => {
+    const filtered = pokemonList.filter((p) =>
       p.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredPokemon(filtered);
-  }, [searchTerm, pokemon.results]);
+  }, [searchTerm, pokemonList]);
 
   const handleSearch = (e) => {
     e.preventDefault(); // prevent page reload
@@ -41,7 +78,6 @@ const Cardlist = ({ pokemon }) => {
           </div>
           <input
             type="search"
-            id="default-search"
             className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Search Pokémon"
             value={searchTerm}
@@ -66,6 +102,19 @@ const Cardlist = ({ pokemon }) => {
           <p className="text-center text-gray-500">No Pokémon found.</p>
         )}
       </div>
+
+      {/* Load More Button */}
+      {hasMore && !searchTerm && (
+        <div className="text-center my-5">
+          <button
+            onClick={fetchPokemon}
+            disabled={loading}
+            className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-2 px-6 rounded hover:opacity-90"
+          >
+            {loading ? "Loading..." : "Load More"}
+          </button>
+        </div>
+      )}
     </div>
   );
 };
