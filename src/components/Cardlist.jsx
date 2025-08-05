@@ -22,7 +22,7 @@ const Cardlist = () => {
       if (data.results.length === 0) {
         setHasMore(false);
       } else {
-        const newList = [...pokemonList, ...data.results];
+        const newList = [...pokemonList, ...data.results];  
         setPokemonList(newList);
         setFilteredPokemon(
           newList.filter((p) =>

@@ -2,12 +2,9 @@
 import { useEffect, useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import Link from "next/link";
-import Image from "next/image";
 import { Bungee } from "next/font/google";
-import { MdCatchingPokemon } from "react-icons/md";
-import Cards from '../../components/Cards'
-import { toast } from 'react-toastify';
-
+import Cards from "../../components/Cards";
+import { toast } from "react-toastify";
 
 const bungee = Bungee({
   weight: "400",
@@ -26,7 +23,7 @@ const Page = () => {
     const updated = favorites.filter((card) => card.name !== name);
     setFavorites(updated);
     localStorage.setItem("favorites", JSON.stringify(updated));
-    toast("Removed from Collection!")
+    toast("Removed from Collection!");
   };
 
   return (
@@ -48,35 +45,13 @@ const Page = () => {
         ) : (
           <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-8">
             {favorites.map((card, index) => (
-              // <div
-              //   key={index}
-              //   className="relative bg-slate-800 rounded-xl p-4 text-white shadow-lg"
-              // >
-              //   <button
-              //     onClick={() => removeFromFavorites(card.name)}
-              //     className="z-1 cursor-pointer"
-              //   >
-              //     <MdCatchingPokemon className="absolute top-2 right-3 text-3xl text-red-500" />
-              //   </button>
-
-              //   <Image
-              //     src={card.image}
-              //     alt={card.name}
-              //     width={150}
-              //     height={150}
-              //     className="mx-auto"
-              //   />
-              //   <h3 className="text-center text-xl capitalize font-semibold mt-4">
-              //     {card.name}
-              //   </h3>
-              // </div>
               <Cards
-  key={card.name}
-  result={card}
-  index={index}
-  mode="collection"
-  onRemove={removeFromFavorites}
-/>
+                key={card.name}
+                result={card}
+                index={index}
+                mode="collection"
+                onRemove={removeFromFavorites}
+              />
             ))}
           </div>
         )}

@@ -28,7 +28,6 @@ const Cards = ({ result, index, mode = "default", onRemove }) => {
 // Fallback to existing ID if available
 const pokemonId = result.id || getPokemonId(result.url);
 
-
   // Check if this Pokémon is already in favorites on mount
   useEffect(() => {
     const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
@@ -93,7 +92,7 @@ const pokemonId = result.id || getPokemonId(result.url);
           <GoDotFill />
         </div>
 
-        <Link href="/details" className="z-1 flex justify-center">
+        <Link href={`${pokemonId}`} className="z-1 flex justify-center">
           <Button className={"absolute top-50 w-38"} content={"Main Details"} />
         </Link>
 
