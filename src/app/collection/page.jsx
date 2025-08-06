@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
-import Link from "next/link";
-import { Bungee } from "next/font/google";
 import Cards from "../../components/Cards";
 import { toast } from "react-toastify";
+import { Bungee } from "next/font/google";
+import Link from "next/link";
 
 const bungee = Bungee({
   weight: "400",
@@ -28,12 +28,12 @@ const Page = () => {
 
   return (
     <div className="bg-gradient-to-t from-blue-500 via-slate-700 to-slate-950 min-h-screen">
-      <header className="justify-between flex p-10 gap-3">
+      <header className="justify-between flex-col md:flex p-10">
         <Link href="/" className="items-center flex gap-2">
           <FaArrowLeftLong className="text-3xl text-white" />
           <h2 className={`text-2xl ${bungee.className}`}>Back</h2>
         </Link>
-        <h2 className={`text-5xl ${bungee.className}`}>Collections</h2>
+        <h2 className={`text-3xl mt-4 flex text-center item-center justify-center md:text-5xl ${bungee.className}`}>Collections</h2>
         <div></div>
       </header>
 
