@@ -61,7 +61,7 @@ const pokemonId = result.id || getPokemonId(result.url);
   };
 
   const backgroundColor =
-    colorVariants[Math.floor(index / 4) % colorVariants.length];
+    colorVariants[Math.floor(index / 3) % colorVariants.length];
 
   return (
     <div className="flex hover:scale-105 transition duration-500 items-center justify-center">

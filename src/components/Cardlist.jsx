@@ -1,6 +1,7 @@
 "use client";
 import Cards from "../components/Cards";
 import { useState, useEffect } from "react";
+import SideBar from '../components/SideBar'
 
 const Cardlist = () => {
   const [pokemonList, setPokemonList] = useState([]);
@@ -22,7 +23,7 @@ const Cardlist = () => {
       if (data.results.length === 0) {
         setHasMore(false);
       } else {
-        const newList = [...pokemonList, ...data.results];  
+        const newList = [...pokemonList, ...data.results];
         setPokemonList(newList);
         setFilteredPokemon(
           newList.filter((p) =>
@@ -92,29 +93,34 @@ const Cardlist = () => {
         </div>
       </form>
 
-      {/* Pokémon Cards */}
-      <div className="grid lg:grid-cols-4 gap-8 md:m-10">
-        {filteredPokemon.length > 0 ? (
-          filteredPokemon.map((result, index) => (
-            <Cards result={result} index={index} key={result.name} />
-          ))
-        ) : (
-          <p className="text-center text-gray-500">No Pokémon found.</p>
-        )}
-      </div>
-
-      {/* Load More Button */}
-      {hasMore && !searchTerm && (
-        <div className="text-center my-5">
-          <button
-            onClick={fetchPokemon}
-            disabled={loading}
-            className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-2 px-6 rounded hover:opacity-90"
-          >
-            {loading ? "Loading..." : "Load More"}
-          </button>
+      <div className="flex">
+        <SideBar/>
+        {/* Pokémon Cards */}
+        <div>
+        <div className="grid lg:grid-cols-3 gap-8 md:m-10">
+          {filteredPokemon.length > 0 ? (
+            filteredPokemon.map((result, index) => (
+              <Cards result={result} index={index} key={result.name} />
+            ))
+          ) : (
+            <p className="text-center text-gray-500">No Pokémon found.</p>
+          )}
         </div>
-      )}
+
+        {/* Load More Button */}
+        {hasMore && !searchTerm && (
+          <div className="text-center my-5">
+            <button
+              onClick={fetchPokemon}
+              disabled={loading}
+              className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-2 px-6 rounded hover:opacity-90"
+            >
+              {loading ? "Loading..." : "Load More"}
+            </button>
+          </div>
+        )}
+        </div>
+      </div>
     </div>
   );
 };

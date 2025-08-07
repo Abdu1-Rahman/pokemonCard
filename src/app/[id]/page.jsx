@@ -62,37 +62,70 @@ const PokemonDetail = ({ params }) => {
   const typeClass = typeColors[mainType] || "bg-gray-500";
 
   return (
-    <div className="min-h-screen bg-cover bg-[url('/images/spotlight1.png')] flex items-center justify-center">
-      <Link href="/" className="items-center flex gap-2">
+    <div className="relative min-h-screen bg-cover bg-[url('/images/spotlight1.png')] flex flex-col py-10 gap-20 ">
+      <Link href="/" className="items-center ml-5 flex gap-2">
         <FaArrowLeftLong className="text-3xl text-white" />
         <h2 className={`text-2xl ${bungee.className}`}>Back</h2>
       </Link>
-      <div
-        className={`shadow-2xl m-30 mt-40 rounded-2xl h-120 w-250 flex flex-col items-center justify-center text-white p-6`}
-      >
-        <h1 className={`text-3xl font-bold capitalize ${bungee.className}`}>
-          {pokemon.name}
-        </h1>
-        <Image
-          src={pokemon.sprites.other["official-artwork"].front_default}
-          alt={pokemon.name}
-          width={300}
-          height={400}
-        />
-        <div className="mt-4">
-          <ul className="flex gap-2">
-            {pokemon.types.map((typeObj, index) => (
-              <li
-                key={index}
-                className={`capitalize px-5 py-2 bg-gradient-to-t ${typeClass} via-slate-700/30 to-slate-950/30 rounded-full text-2xl font-semibold text-white ${
-                  typeColors[typeObj.type.name]
-                }`}
-              >
-                {typeObj.type.name}
-              </li>
-            ))}
-          </ul>
+
+    <div className="flex flex-col items-center justify-center">
+      <div className="flex gap-50 justify-between">
+        <div> </div>
+        <div className="flex flex-col item-center justify-center ml-30">
+          <h1
+            className={`text-3xl flex  items-center justify-center font-bold capitalize ${bungee.className}`}
+          >
+            {pokemon.name}
+          </h1>
+          <Image
+            src={pokemon.sprites.other["official-artwork"].front_default}
+            alt={pokemon.name}
+            width={300}
+            height={400}
+          />
         </div>
+        <div className="mt-4 flex flex-col gap-10">
+          <div>
+            <p className={`${bungee.className}`}>Type</p>
+            <ul className="flex gap-4 ">
+              {pokemon.types.map((typeObj, index) => (
+                <li
+                  key={index}
+                  className={`capitalize px-5 py-2 bg-gradient-to-t ${typeClass} via-slate-700/30 to-slate-950/30 rounded-full text-2xl font-semibold text-white ${
+                    typeColors[typeObj.type.name]
+                  }`}
+                >
+                  {typeObj.type.name}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <p className={`${bungee.className}`}>Abilities</p>
+            <ul className="flex">
+              {pokemon.abilities.map((ability, index) => (
+                <li
+                  key={index}
+                  className="capitalize px-5 py-2 bg-gradient-to-t from-blue-500 via-slate-700/30 to-slate-950/30 rounded-full text-2xl font-semibold text-white"
+                >
+                  {ability.ability.name}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-center">
+        <Image
+          src="/images/Pokeballopen.png"
+          alt="pokeballopen"
+          width={250}
+          height={250}
+          className="rotate-260"
+        />
+      </div>
       </div>
     </div>
   );
